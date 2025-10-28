@@ -1,15 +1,15 @@
-import { Mesh, MeshStandardMaterial, SphereGeometry } from "three";
+import { Mesh, MeshStandardMaterial, QuaternionLike, SphereGeometry, Vector3Like } from "three";
 import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
 
 
 class PhysicsSphere extends PhysicsMesh {
-    constructor(data: { radius: number, segments: number ,mass: number}) {
+    constructor(data: { radius: number, segments: number ,mass: number, position?: Vector3Like, quaternion?: QuaternionLike}) {
         super({
             type: 'sphere',
             params: data,
             mass: data.mass,
-            position: {x: 0, y: 0, z: 0},
-            quaternion: {x: 0, y: 0, z: 0, w: 1},
+            position: data.position || {x: 0, y: 0, z: 0},
+            quaternion: data.quaternion || {x: 0, y: 0, z: 0, w: 1},
         });
     }
 

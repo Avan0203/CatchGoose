@@ -2,7 +2,7 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-27 16:58:08
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-27 17:30:47
+ * @LastEditTime: 2025-10-28 16:01:46
  * @FilePath: \catchBirld\src\mesh\PhysicsPlane.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,8 +23,8 @@ class PhysicsPlane extends PhysicsMesh {
 
     toMesh(): Mesh {
         const { width, height } = this.data.params;
-        console.log('width, height: ', width, height);
         const geometry = new PlaneGeometry(width, height);
+        geometry.rotateX(-Math.PI / 2);
         const material = new MeshStandardMaterial({ color: 0xffff00, side: 2 });
         return new Mesh(geometry, material);
     }
