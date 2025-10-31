@@ -2,11 +2,11 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-27 14:43:23
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-28 17:29:42
+ * @LastEditTime: 2025-10-31 17:36:27
  * @FilePath: \catchBirld\src\utils\params2Body.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Body, Box, Cylinder, Quaternion, Shape, Sphere, Vec3 } from "cannon-es";
+import { Body, Box, Cylinder, Plane, Quaternion, Shape, Sphere, Vec3 } from "cannon-es";
 import { PhysicsMeshData } from "../scene/PhysicsMesh";
 
 type ShapeResult = {
@@ -41,7 +41,7 @@ class Params2Body {
             case 'sphere':
                 return [{ shape: new Sphere(params.radius) }];
             case 'plane':
-                return [{ shape: new Box(new Vec3(params.width, 0.1, params.height)) }];
+                return [{ shape: new Plane() }];
             case 'cylinder':
                 return [{ shape: new Cylinder(params.radiusTop, params.radiusBottom, params.height, params.segments) }];
             case 'box':
@@ -60,6 +60,27 @@ class Params2Body {
                     const quaternion = new Quaternion().setFromEuler(0, 0, k, 'YXZ')
                     result.push({ shape: columnShape, offset, quaternion })
                 }
+                return result;
+            }
+            case 'bucket': {
+                const { radius, height, segments } = params;
+                console.log('radius, height, segments : ', radius, height, segments);
+                const pice = Math.PI * 2 / segments;
+                const halfPice = pice / 2;
+                const D = radius * Math.sin(halfPice);
+                console.log('D: ', D);
+                const H = radius * Math.cos(halfPice);
+                console.log('H: ', H);
+
+                const box = new Box(new Vec3(D, height / 2, 0.05));
+                for (let j = 0, k = halfPice; j < segments; j++, k = j * pice + halfPice) {
+                    const offset = new Vec3(H * Math.sin(k), 0, H * Math.cos(k));
+                    const quaternion = new Quaternion().setFromEuler(0, k, 0)
+                    result.push({ shape: box, offset, quaternion })
+                }
+
+                result.push({ shape: new Box(new Vec3(radius, 0.05, radius)), offset: new Vec3(0, -height / 2, 0), quaternion: new Quaternion().setFromEuler(0, Math.PI / 2,0) })
+
                 return result;
             }
             default:

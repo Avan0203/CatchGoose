@@ -2,16 +2,20 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-27 16:58:08
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-28 16:01:46
+ * @LastEditTime: 2025-10-31 16:10:12
  * @FilePath: \catchBirld\src\mesh\PhysicsPlane.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Mesh, MeshStandardMaterial, PlaneGeometry, QuaternionLike, Vector3Like } from "three";
-import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
+import { PlaneGeometry, Quaternion } from "three";
+import { PhysicsData, PhysicsMesh } from "../scene/PhysicsMesh";
 
+type PhysicsPlaneData = PhysicsData & {
+    width: number;
+    height: number;
+}
 
 class PhysicsPlane extends PhysicsMesh {
-    constructor(data: { width: number, height: number, mass: number, position?: Vector3Like, quaternion?: QuaternionLike }) {
+    constructor(data: PhysicsPlaneData) {
         super({
             type: 'plane',
             params: data,
@@ -21,15 +25,13 @@ class PhysicsPlane extends PhysicsMesh {
         });
     }
 
-    toMesh(): Mesh {
+    makeGeometry() {
         const { width, height } = this.data.params;
         const geometry = new PlaneGeometry(width, height);
-        geometry.rotateX(-Math.PI / 2);
-        const material = new MeshStandardMaterial({ color: 0xffff00, side: 2 });
-        return new Mesh(geometry, material);
+        return geometry;
     }
 
-    toBody(): PhysicsMeshData {
+    makeBody() {
         const { width, height, mass, position, quaternion } = this.data.params;
         return {
             type: 'plane',
@@ -41,4 +43,4 @@ class PhysicsPlane extends PhysicsMesh {
     }
 }
 
-export { PhysicsPlane };
+export { PhysicsPlane, type PhysicsPlaneData };

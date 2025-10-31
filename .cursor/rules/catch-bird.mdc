@@ -1,4 +1,4 @@
 ---
 alwaysApply: true
 ---
-项目使用pnpm+vite+three+cannon（worker版本）技术栈，使用最新版
+项目使用pnpm+vite+three+cannon（worker版本）技术栈

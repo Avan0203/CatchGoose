@@ -2,7 +2,7 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-24 13:30:56
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-28 15:59:34
+ * @LastEditTime: 2025-10-31 17:30:59
  * @FilePath: \catchBirld\src\scene\PhysicsSync.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -93,12 +93,13 @@ export class PhysicsSync {
   }
 
   addObject(object: PhysicsMesh) {
-    const mesh = object.toMesh();
+    const geometry = object.makeGeometry();
+    const mesh = PhysicsMesh.toMesh(geometry);
     this.meshes.push(mesh);
     this.sceneManager.addObject(mesh);
-    this.worker.postMessage({ type: 'add', payload: object.toBody() });
+    this.worker.postMessage({ type: 'add', payload: object.makeBody() });
 
-    this.debuggerWorld.addBody(Params2Body.toBody(object.toBody()));
+    this.debuggerWorld.addBody(PhysicsMesh.toBody(object.makeBody()));
   }
 
   updateObjects() {

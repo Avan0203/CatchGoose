@@ -1,9 +1,21 @@
-import { Mesh, MeshStandardMaterial, QuaternionLike, SphereGeometry, Vector3Like } from "three";
-import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
+/*
+ * @Author: wuyifan wuyifan@udschina.com
+ * @Date: 2025-10-27 11:40:22
+ * @LastEditors: wuyifan wuyifan@udschina.com
+ * @LastEditTime: 2025-10-31 15:31:31
+ * @FilePath: \catchBirld\src\mesh\PhysicsSphere.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { SphereGeometry } from "three";
+import { PhysicsData, PhysicsMesh } from "../scene/PhysicsMesh";
 
+type PhysicsSphereData = PhysicsData & {
+    radius: number;
+    segments: number;
+}
 
 class PhysicsSphere extends PhysicsMesh {
-    constructor(data: { radius: number, segments: number ,mass: number, position?: Vector3Like, quaternion?: QuaternionLike}) {
+    constructor(data: PhysicsSphereData) {
         super({
             type: 'sphere',
             params: data,
@@ -13,16 +25,15 @@ class PhysicsSphere extends PhysicsMesh {
         });
     }
 
-    toMesh(): Mesh {
+    makeGeometry() {
         const { radius, segments } = this.data.params;
         const geometry = new SphereGeometry(radius, segments, segments);
-        const material = new MeshStandardMaterial({ color: 0x00ff00 });
-        return new Mesh(geometry, material);
+        return geometry;
     }
 
-    toBody(): PhysicsMeshData {
+    makeBody() {
         return this.data;
     }
 }
 
-export { PhysicsSphere };
+export { PhysicsSphere, type PhysicsSphereData };

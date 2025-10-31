@@ -2,16 +2,22 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-28 16:11:38
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-28 16:36:39
+ * @LastEditTime: 2025-10-31 15:41:20
  * @FilePath: \catchBirld\src\mesh\PhysicsCylinder.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { CylinderGeometry, Mesh, MeshStandardMaterial, QuaternionLike, Vector3Like } from "three";
-import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
+import { CylinderGeometry } from "three";
+import { PhysicsData, PhysicsMesh } from "../scene/PhysicsMesh";
 
+type PhysicsCylinderData = PhysicsData & {
+    radiusTop?: number;
+    radiusBottom?: number;
+    height?: number;
+    segments?: number;
+}
 
 class PhysicsCylinder extends PhysicsMesh {
-    constructor(data: { radiusTop?: number, radiusBottom?: number, height?: number, segments?: number, mass?: number, position?: Vector3Like, quaternion?: QuaternionLike }) {
+    constructor(data: PhysicsCylinderData) {
         super({
             type: 'cylinder',
             params: data,
@@ -21,16 +27,16 @@ class PhysicsCylinder extends PhysicsMesh {
         });
     }
 
-    toMesh(): Mesh {
+    makeGeometry() {
         const { radiusTop, radiusBottom, height, segments } = this.data.params;
         const geometry = new CylinderGeometry(radiusTop, radiusBottom, height, segments, segments, true);
-        const material = new MeshStandardMaterial({ color: 0xff9900 });
-        return new Mesh(geometry, material);
+        return geometry;
     }
 
-    toBody(): PhysicsMeshData {
+    makeBody() {
         return this.data;
     }
+
 }
 
-export { PhysicsCylinder };
+export { PhysicsCylinder, type PhysicsCylinderData };

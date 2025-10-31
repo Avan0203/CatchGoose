@@ -2,16 +2,22 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-28 16:57:30
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-28 17:05:50
+ * @LastEditTime: 2025-10-31 15:36:26
  * @FilePath: \catchBirld\src\mesh\PhysicsTorus.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Mesh, MeshStandardMaterial, QuaternionLike, TorusGeometry, Vector3Like } from "three";
-import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
+import { TorusGeometry } from "three";
+import { PhysicsData, PhysicsMesh } from "../scene/PhysicsMesh";
 
+type PhysicsTorusData = PhysicsData & {
+    radius?: number;
+    tube?: number;
+    tubeSegments?: number;
+    radialSegments?: number;
+}
 
 class PhysicsTorus extends PhysicsMesh {
-    constructor(data: { radius?: number, tube?: number, tubeSegments?: number, radialSegments?: number, mass?: number, position?: Vector3Like, quaternion?: QuaternionLike }) {
+    constructor(data: PhysicsTorusData) {
         super({
             type: 'torus',
             params: data,
@@ -21,16 +27,15 @@ class PhysicsTorus extends PhysicsMesh {
         });
     }
 
-    toMesh(): Mesh {
+    makeGeometry() {
         const { radius, tube, tubeSegments, radialSegments } = this.data.params;
         const geometry = new TorusGeometry(radius, tube, tubeSegments, radialSegments);
-        const material = new MeshStandardMaterial({ color: 0x345900 });
-        return new Mesh(geometry, material);
+        return geometry;
     }
 
-    toBody(): PhysicsMeshData {
+    makeBody() {
         return this.data;
     }
 }
 
-export { PhysicsTorus };
+export { PhysicsTorus, type PhysicsTorusData };

@@ -1,9 +1,14 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, QuaternionLike, Vector3Like } from "three";
-import { PhysicsMesh, PhysicsMeshData } from "../scene/PhysicsMesh";
+import { BoxGeometry } from "three";
+import { PhysicsData, PhysicsMesh } from "../scene/PhysicsMesh";
 
+type PhysicsBoxData = PhysicsData & {
+    width?: number;
+    height?: number;
+    depth?: number;
+}
 
 class PhysicsBox extends PhysicsMesh {
-    constructor(data: { width?: number, height?: number, depth?: number, mass?: number, position?: Vector3Like, quaternion?: QuaternionLike }) {
+    constructor(data: PhysicsBoxData) {
         super({
             type: 'box',
             params: data,
@@ -13,17 +18,15 @@ class PhysicsBox extends PhysicsMesh {
         });
     }
 
-    toMesh(): Mesh {
+    makeGeometry() {
         const { width, height, depth } = this.data.params;
-        const geometry = new BoxGeometry(width, height, depth);
-        const material = new MeshStandardMaterial({ color: 0x0ff0f0 });
-        return new Mesh(geometry, material);
+        return new BoxGeometry(width, height, depth);
     }
 
-    toBody(): PhysicsMeshData {
+    makeBody() {
         const { width, height, depth } = this.data.params;
         return Object.assign({}, this.data, { params: { width: width / 2, height: height / 2, depth: depth / 2 } });
     }
 }
 
-export { PhysicsBox };
+export { PhysicsBox, type PhysicsBoxData };
