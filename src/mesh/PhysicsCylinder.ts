@@ -2,7 +2,7 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-28 16:11:38
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-31 15:41:20
+ * @LastEditTime: 2025-11-01 17:25:03
  * @FilePath: \catchBirld\src\mesh\PhysicsCylinder.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -28,13 +28,10 @@ class PhysicsCylinder extends PhysicsMesh {
     }
 
     makeGeometry() {
+        if (this.geometry) return this.geometry;
         const { radiusTop, radiusBottom, height, segments } = this.data.params;
         const geometry = new CylinderGeometry(radiusTop, radiusBottom, height, segments, segments, true);
         return geometry;
-    }
-
-    makeBody() {
-        return this.data;
     }
 
 }

@@ -2,7 +2,7 @@
  * @Author: wuyifan wuyifan@udschina.com
  * @Date: 2025-10-27 14:43:23
  * @LastEditors: wuyifan wuyifan@udschina.com
- * @LastEditTime: 2025-10-31 17:36:27
+ * @LastEditTime: 2025-11-01 13:07:09
  * @FilePath: \catchBirld\src\utils\params2Body.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -63,23 +63,23 @@ class Params2Body {
                 return result;
             }
             case 'bucket': {
-                const { radius, height, segments } = params;
-                console.log('radius, height, segments : ', radius, height, segments);
-                const pice = Math.PI * 2 / segments;
-                const halfPice = pice / 2;
-                const D = radius * Math.sin(halfPice);
-                console.log('D: ', D);
-                const H = radius * Math.cos(halfPice);
-                console.log('H: ', H);
+                const { radius, height = 0 } = params;
+                const segments = 12;
+                const piece = Math.PI * 2 / segments;
+                const halfPiece = piece / 2;
 
-                const box = new Box(new Vec3(D, height / 2, 0.05));
-                for (let j = 0, k = halfPice; j < segments; j++, k = j * pice + halfPice) {
-                    const offset = new Vec3(H * Math.sin(k), 0, H * Math.cos(k));
-                    const quaternion = new Quaternion().setFromEuler(0, k, 0)
-                    result.push({ shape: box, offset, quaternion })
+                const plane = new Plane();
+                for (let j = 0, k = halfPiece; j < segments; j++, k = j * piece + halfPiece) {
+                    const offset = new Vec3(radius * Math.sin(k), 0, radius * Math.cos(k));
+                    const quaternion = new Quaternion().setFromEuler(0, k + Math.PI, 0);
+                    result.push({ shape: plane, offset, quaternion });
                 }
 
-                result.push({ shape: new Box(new Vec3(radius, 0.05, radius)), offset: new Vec3(0, -height / 2, 0), quaternion: new Quaternion().setFromEuler(0, Math.PI / 2,0) })
+                // bottom plane: normal +Y, placed at y = -height/2
+                const bottom = new Plane();
+                const bottomOffset = new Vec3(0, -height / 2, 0);
+                const bottomQuat = new Quaternion().setFromEuler(-Math.PI / 2, 0, 0);
+                result.push({ shape: bottom, offset: bottomOffset, quaternion: bottomQuat });
 
                 return result;
             }
